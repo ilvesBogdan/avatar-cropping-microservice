@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package ImageService;
+
+option go_package = "imgresizer/golang client/main";
+
+service ImageService {
+  rpc UploadImage(ImageRequest) returns (ImageResponse) {}
+}
+
+message ImageRequest {
+  string base64_image = 1;
+}
+
+message ImageResponse {
+  bytes image_data = 1;
+}
