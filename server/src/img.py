@@ -1,20 +1,18 @@
-import os
-import re
-import base64
-from PIL import Image
 from io import BytesIO
 
+from PIL import Image
 
-def image_processing(base64str: str) -> Image.Image:
+
+def image_processing(raw_image: bytes) -> Image.Image:
     """
-    Обрабатывает изображение, закодированное в формате base64.
+    Обрабатывает изображение, заданное в виде байтов.
     Аргументы:
-        base64str (str): Строка, содержащая изображение в формате base64.
+        raw_image (bytes): Байты изображения.
     Возвращает:
         Image.Image: Объект изображения типа PIL.Image.Image.
     """
-    text = re.sub('^data:image/.+;base64,', '', base64str)
-    img = Image.open(BytesIO(base64.b64decode(text)))
+    image_io = BytesIO(raw_image)
+    img = Image.open(image_io)
     img = crop_center(img)
     return img
 

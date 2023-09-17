@@ -1,20 +1,31 @@
-import grpc
 from concurrent import futures
-import grpc_pb2_grpc as pb
 
+import grpc
+import grpc_pb2_grpc as pb
 from grpc_pb2 import ImageResponse
-from img import image_processing, encode_image
+from img import encode_image, image_processing
+from PIL import UnidentifiedImageError
 
 
 class ImageService(pb.ImageServiceServicer):
     def UploadImage(self, request, context):
-        base64_image = request.base64_image
 
-        image_data = image_processing(base64_image)
+        try:
+            image_data = image_processing(request.raw_image)
+        except UnidentifiedImageError:
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Invalid file transfer format")
+            return
+        except Exception as err:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"A file reading error occurred: {err}")
+            return
 
-        image_data = encode_image(image_data, 650, 'webp')
-
-        return ImageResponse(image_data=image_data)
+        for format in request.formats:
+            if not context.is_active():
+                break
+            image = encode_image(image_data.copy(), format.size, format.format)
+            yield ImageResponse(image_data=image)
 
 
 def main(port: int):

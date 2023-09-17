@@ -5,13 +5,19 @@ package ImageService;
 option go_package = "imgresizer/golang client/main";
 
 service ImageService {
-  rpc UploadImage(ImageRequest) returns (ImageResponse) {}
+  rpc UploadImage(ImageRequest) returns (stream ImageResponse) {}
 }
 
 message ImageRequest {
-  string base64_image = 1;
+  repeated Format formats = 1;
+  bytes raw_image = 2;
 }
 
 message ImageResponse {
   bytes image_data = 1;
+}
+
+message Format {
+  string format = 1;
+  int32 size = 2;
 }
