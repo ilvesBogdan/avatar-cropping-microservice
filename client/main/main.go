@@ -125,7 +125,7 @@ func uploadAndOutputFile(w http.ResponseWriter, r *http.Request) {
 			i = i + 1
 		}
 
-		// Вывод изображения
+		// Вывод изображений
 		fmt.Fprintf(w, `<!DOCTYPE html>
 <html>
 <head>
