@@ -4,8 +4,14 @@
 
 ## Устновка
 
-через docker
-dockerfile в разработке!
+Для ручной сборки docker контенера, выполните команду
+```bash
+docker build -t avatar-cropping .
+```
+Для запуска выполните
+```bash
+docker run -p 50051:50051 avatar-cropping
+```
 
 ## Запуск!
 
